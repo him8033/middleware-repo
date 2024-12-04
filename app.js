@@ -93,6 +93,7 @@ app.use((err,req,res,next) => {
     res.status(status).send(message);
 })
 
+<<<<<<< HEAD
 
 // For handling asynchronas errors we implement these steps
 
@@ -120,6 +121,9 @@ app.use((err,req,res,next) => {
 // }))
 
 
+=======
+// For handling asynchronas errors we implement in mini whatsapp repo 
+>>>>>>> 81d688d0d953d171e62380332b2183f056c3c65d
 
 app.use((req,res) => {                                              // this type of middleware we are written in the last of all middleware 
     res.status(404).send("Page not found!");                        //if above middleware is not working perform then this execute and perform 
