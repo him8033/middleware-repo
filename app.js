@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const port = 3000;
+const ExpressError = require("./ExpressError.js");          // this line require custom error class
 
 // app.use((req,res) => {                                  // if middleware not specified any path that means he performs any of request
 //     let {query} = req.query;                            // middleware is properly work normal requests he accepts parameters,queries and etc
@@ -40,13 +41,10 @@ const checkToken = (req,res,next) => {                                  // if yo
     if(token === "giveaccess"){                                         // particular api where you want to use these middleware
         next();
     }else{
-        throw new Error ("Access Denied!");
+        // throw new Error ("Access Denied!");                             // if you want thorw an error you simple send according to this
+        throw new ExpressError(401, "Access Denied!");                  // this line send custom error 
     }
 }
-
-// app.get("/wrong",(req,res) => {                             //this is basic error whos generate default error whos written in express default error
-//     abcd = abcd;                                            // handler who generate a 500 error
-// })
 
 app.get("/api",checkToken,(req,res) => {                                //write the middleware function after defining path
     res.send("data");
@@ -68,6 +66,28 @@ app.get("/random",(req,res) => {
 //     // console.log(req);
 //     next();
 // })
+
+app.get("/wrong",(req,res) => {                             //this is basic error whos generate default error whos written in express default error
+    abcd = abcd;                                            // handler who generate a 500 error
+})
+
+// app.use((err,req,res,next) => {                             // this defines your errors you want to change error and overwrite
+//     // console.log(err);                                    // this line show the whole error which is faced
+//     console.log("--------Error 1---------");                // this will show your custom error msg
+//     // next();                                              // this line call the next non error middleware and if next not determine then user stuck this middleware
+//     next(err);                                              // if any other error handling middleware found then this next(err) called those middleware
+// })
+
+// app.use((err,req,res,next) => {
+//     console.log("--------Error 2----------");
+//     next(err);                                              // this line forward to default error handling page
+// })
+
+app.use((err,req,res,next) => {
+    // res.send(err);                                       // this line send the error string this is generally use when you create custom error for sending the details of error in website
+    let {status = 500 , message = "some error occured"} = err;        // if some time error are not define then these default value can be send whos written in this line
+    res.status(status).send(message);
+})
 
 app.use((req,res) => {                                              // this type of middleware we are written in the last of all middleware 
     res.status(404).send("Page not found!");                        //if above middleware is not working perform then this execute and perform 
