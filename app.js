@@ -83,11 +83,17 @@ app.get("/wrong",(req,res) => {                             //this is basic erro
 //     next(err);                                              // this line forward to default error handling page
 // })
 
+app.get("/admin",(req,res) => {                                        // if you want to create a route where no one access the data then you send 
+    throw new ExpressError(403,"Acess to Admin is Forbidden");         // a custom error which you want to send for user
+})
+
 app.use((err,req,res,next) => {
     // res.send(err);                                       // this line send the error string this is generally use when you create custom error for sending the details of error in website
     let {status = 500 , message = "some error occured"} = err;        // if some time error are not define then these default value can be send whos written in this line
     res.status(status).send(message);
 })
+
+// For handling asynchronas errors we implement in mini whatsapp repo 
 
 app.use((req,res) => {                                              // this type of middleware we are written in the last of all middleware 
     res.status(404).send("Page not found!");                        //if above middleware is not working perform then this execute and perform 
