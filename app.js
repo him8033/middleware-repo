@@ -93,11 +93,33 @@ app.use((err,req,res,next) => {
     res.status(status).send(message);
 })
 
+
 // For handling asynchronas errors we implement these steps
+
 // async functions are generally not called next() function thats reason normal type sendig error not handled if we want to send async error
 // then we create our custom error in under the next() function
 // ex- next(new ExpressError(404,"some Error found"));
+
 // other case we handle async error using try and catch block we just write whole code in try block and pass the error in catch block
+
+// a one more method to solve the async errors that is asyncWrap method
+// in asyncWrap we define a function i.e.
+//  function asyncWrap(fn){
+//     return function(req,res,next) {
+//         fn(req,res,next).catch((err) => {
+//             next(err);
+//         })
+//     }
+//  }
+// for handling error we call asyncWrap function with your default codes 
+// example-     
+// app.get("/chat",asyncWrap(async(req,res,next) => {
+//     ---------  
+//     ---------
+//     ---------
+// }))
+
+
 
 app.use((req,res) => {                                              // this type of middleware we are written in the last of all middleware 
     res.status(404).send("Page not found!");                        //if above middleware is not working perform then this execute and perform 
