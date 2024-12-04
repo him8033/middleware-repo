@@ -87,13 +87,24 @@ app.get("/admin",(req,res) => {                                        // if you
     throw new ExpressError(403,"Acess to Admin is Forbidden");         // a custom error which you want to send for user
 })
 
+let handleReferenceErr = (err) => {
+    console.log("This is Reference Error Please follow the rules");
+    console.dir(err.message);                               // 'err.message' show the message of error
+    return err;
+}
+
 app.use((err,req,res,next) => {
     // res.send(err);                                       // this line send the error string this is generally use when you create custom error for sending the details of error in website
     let {status = 500 , message = "some error occured"} = err;        // if some time error are not define then these default value can be send whos written in this line
+    console.log(err.name);                                  // 'err.name' show the name of error 
+    if(err.name==="ReferenceError"){
+        // console.log("This is Reference Error");              // if we want to print custom message when any special type of error we can use this trick
+        err = handleReferenceErr(err);                          //this is the way if we doing multiple tasks after coming this type error we make an funciton and call it
+    }
     res.status(status).send(message);
+    next(err);
 })
 
-<<<<<<< HEAD
 
 // For handling asynchronas errors we implement these steps
 
@@ -120,10 +131,6 @@ app.use((err,req,res,next) => {
 //     ---------
 // }))
 
-
-=======
-// For handling asynchronas errors we implement in mini whatsapp repo 
->>>>>>> 81d688d0d953d171e62380332b2183f056c3c65d
 
 app.use((req,res) => {                                              // this type of middleware we are written in the last of all middleware 
     res.status(404).send("Page not found!");                        //if above middleware is not working perform then this execute and perform 
